@@ -1,0 +1,46 @@
+.bg {
+    height: 100vh;
+    background: rgb(134, 190, 218);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 6rem;
+}
+
+.main-board {
+    background: rgb(76, 73, 73);
+    border-radius: 0 0 10px 10px;
+}
+
+.title {
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(67, 67, 144);
+    height: 60px;
+    border-radius: 10px 10px 0 0;
+}
+
+#outputResult {
+    overflow: auto;
+    height: 200px;
+}
+
+.nes-input {
+    border-radius: 10px;
+}
+
+.os {
+    color: green;
+}
+
+.at {
+    color: purple;
+}
+
+.na {
+    color: blue;
+}
