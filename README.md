@@ -30,7 +30,7 @@ command
 
 
 ## URL
-[為替変換 CLI]()
+[為替変換 CLI](https://exchange-soysan.vercel.app/)
 
 ## Author
 [@soylove2](https://twitter.com/soylove2)
