@@ -1,5 +1,3 @@
-import { CurrenciesProps, ValidateProps } from './types';
-
 const OutputResult = <HTMLElement>document.querySelectorAll("#outputResult")[0];
 const InputCommand = <HTMLInputElement>document.querySelectorAll('#inputCommand')[0];
 
@@ -25,7 +23,11 @@ const SubmitSearch = async (e: KeyboardEvent) => {
       InputCommand.value = '';
 
       const validatorRes = CCTools.ValidateCommandArr(cliArr);
+      console.log('valid')
+      if (!validatorRes['isValid']) CCTools.OutputResultParagraph(OutputResult, false, validatorRes['errorMessage']);
+      else CCTools.OutputResultParagraph(OutputResult, true, CCTools.EvaluatedResult(cliArr));
 
+      OutputResult.scrollTop = OutputResult.scrollHeight;
       break;
     default:
       return;
@@ -88,9 +90,9 @@ class CCTools {
     parentDiv.innerHTML +=
       `
       <p>
-      <span class='os'>student</span>
+      <span class='os'>User</span>
       <span class='at'>@</span>
-      <span class='na'>recursionist</span>
+      <span class='na'>tools</span>
       : ${InputCommand.value}
       </p>
       `;
@@ -162,4 +164,72 @@ class CCTools {
     if (commandArr.length > 2) return { 'isValid': false, 'errorMessage': `command ${commandArr[1]} requires no argument` };
     return { 'isValid': true, 'errorMessage': '' };
   }
+
+  static OutputResultParagraph = (outputDiv: HTMLElement, isValid: boolean, resultString: string) => {
+    let name = "";
+    let color = "";
+    if (isValid) {
+      name = "CCTools";
+      color = "#73AE98";
+    } else {
+      name = "CCTools Error";
+      color = "#FD4821";
+    }
+    outputDiv.innerHTML +=
+      `
+      <p>
+        <span style='color: ${color}'>${name}</span>: ${resultString}
+      </p>
+      `;
+    return;
+  }
+
+  static EvaluatedResult = (commandArr: string[]): string => {
+    switch (commandArr[1]) {
+      case 'convert':
+        return CCTools.Convert(commandArr);
+      case 'showDominations':
+        return CCTools.ShowDominations(commandArr[2]);
+      default:
+        return CCTools.ShowLocations();
+    }
+  }
+
+  static Convert = (commandArr: string[]): string => {
+    let sourceRate: number;
+    let destinationRate: number;
+    currenciesData.forEach(curr => {
+      if (curr.denomination == commandArr[2]) sourceRate = curr.rate;
+      if (curr.denomination == commandArr[4]) destinationRate = curr.rate;
+    });
+    const calcAmount = Math.floor((sourceRate! * Number(commandArr[3])) * 100 / destinationRate!) / 100;
+    return `${commandArr[3]} ${commandArr[2]} => ${calcAmount} ${commandArr[4]}`;
+  }
+
+  static ShowDominations = (locale: string): string => {
+    let res = '';
+    currenciesData.forEach(curr => {
+      if (curr.locale === locale)
+        res += curr.denomination + ' ';
+    });
+    return res.trimRight();
+  }
+
+  static ShowLocations = (): string => {
+    let locales: string[] = CCTools.getAllLocales();
+    let res = '';
+    locales.forEach(locale => res += locale + ' ');
+    return res;
+  }
+}
+
+type ValidateProps = {
+  isValid: boolean,
+  errorMessage: string,
+}
+
+type CurrenciesProps = {
+  locale: string;
+  denomination: string;
+  rate: number;
 }
